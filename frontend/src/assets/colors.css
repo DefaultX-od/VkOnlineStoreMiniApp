@@ -1,0 +1,22 @@
+:root{
+    --color-accent: #525252;
+    --color-accent-semi-transparent: #52525231;
+    --color-border: #52525244;
+
+    --color-green: #54964F;
+    --color-red: #FD4755;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    --color-bg-primary: #F2F2F2;
+    --color-bg-primary-semi-transparent: #f2f2f2CC;
+    --color-bg-secondary: #FFFFFF;
+    --color-bg-tertiary: #EAEAEA;
+
+    --color-shadow: #0000001A;
+
+    --color-text-primary: #525252;
+    --color-text-secondary: #000000;
+    --color-text-tertiary: #5B5B5B;
+    --color-text-quaternary: #525252A6;
+}

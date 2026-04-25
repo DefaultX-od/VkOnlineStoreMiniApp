@@ -1,0 +1,62 @@
+.text{
+    color: #525252;
+}
+
+.text.dark{
+    color: black;
+}
+
+.text.light{
+    color: #ffffff;
+}
+
+.text.red{
+    color: red;
+}
+
+.text.gray{
+    color: #5b5b5b;
+}
+
+.text.tiniest{
+    font-size: 7pt;
+}
+
+.text.tiny{
+    font-size: 10px;
+}
+
+.text.xsmall{
+   font-size: 12px; 
+}
+
+.text.small{
+    font-size: 14px;
+}
+
+.text.semi-medium{
+    font-size: 16px;
+}
+
+.semi-medium{
+    font-size: 16px;
+}
+
+.text.medium{
+    font-size: 18px;
+}
+
+.text.big{
+    font-size: 20px;
+}
+
+.text.bigger{
+    font-size: 24px;
+}
+
+.text.bold{
+    font-weight: bold;
+}
+.bold{
+    font-weight: bold;
+}
