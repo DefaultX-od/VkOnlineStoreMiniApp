@@ -62,7 +62,7 @@ def setup_project():
 
     passenger_wsgi_content = f"""import sys, os
 sys.path.append('{os.path.abspath(os.curdir)}')
-sys.path.append('{os.path.join(os.path.abspath(os.curdir), "OnlineStore")}')
+sys.path.append('{os.path.join(os.path.abspath(os.curdir), "OnlineStore", "backend")}')
 sys.path.append('{site_packages_path}')
 from OnlineStore import app as application
 from werkzeug.debug import DebuggedApplication
