@@ -1,8 +1,7 @@
 from decimal import Decimal
 
-from backend.repositories import ProductRepo
+from OnlineStore.backend.repositories import ProductRepo
 from .image_service import ImageService
-from backend.models import *
 
 
 class ProductService:

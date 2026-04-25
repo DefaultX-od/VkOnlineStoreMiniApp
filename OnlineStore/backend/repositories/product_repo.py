@@ -1,7 +1,6 @@
 from sqlalchemy.orm import joinedload
 
-from backend.services import DataBase
-from backend.models import *
+from OnlineStore.backend.services import DataBase
 
 
 class ProductRepo():

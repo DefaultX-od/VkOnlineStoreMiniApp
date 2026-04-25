@@ -1,8 +1,7 @@
 from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 
-from backend.services import DataBase
-from backend.models import *
+from OnlineStore.backend.services import DataBase
 
 
 class CartRepo:

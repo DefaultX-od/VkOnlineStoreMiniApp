@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 
-from backend.services import ProductService, CartService, OrderService
+from OnlineStore.backend.services import ProductService, CartService, OrderService
 
 from dotenv import load_dotenv
 from bot_vk_ng import send_notification

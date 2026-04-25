@@ -3,16 +3,15 @@ from vk_api import VkApi, VkUpload
 from vk_api.utils import get_random_id
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-import json
 from dotenv import load_dotenv
 
-from backend.repositories import ProductRepo, OrderRepo
+from OnlineStore.backend.repositories import ProductRepo, OrderRepo
 PRODUCT_REPO = ProductRepo()
 ORDER_REPO = OrderRepo()
 
 from workbook_master import create_category_groups_template, \
     create_categories_template, create_product_groups_template, create_products_template, create_drop_points_template, \
-    get_data_from_file, save_doc, construct_category_groups, construct_categories, \
+    save_doc, construct_category_groups, construct_categories, \
     construct_items, construct_drop_points, construct_item_groups, create_category_details_template, \
     construct_category_details
 

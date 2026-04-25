@@ -1,6 +1,5 @@
-from .product_service import ProductService
-from backend.repositories import CartRepo
-from backend.models import *
+from OnlineStore.backend.repositories import CartRepo
+from OnlineStore.backend.models import *
 
 
 class CartService:
