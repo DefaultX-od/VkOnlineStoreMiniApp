@@ -17,8 +17,8 @@ ORDER_SERVICE = OrderService(CART_SERVICE)
 
 app = Flask(
     __name__,
-    static_folder='dist',  # папка со сборкой Vite
-    template_folder='dist' # index.html будет из dist
+    static_folder='dist',
+    template_folder='dist'
 )
 app.config["JWT_SECRET_KEY"] = os.getenv('vk_token')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400

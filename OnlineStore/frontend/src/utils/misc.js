@@ -11,11 +11,12 @@ export function getProductWordAccordingToQuantity(quantity){
 }
 
 export function getAuthToken(){
-    const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('access_token='))
-        ?.split('=')[1];
-    return token;
+    return localStorage.getItem('access_token');
+    // const token = document.cookie
+    //     .split('; ')
+    //     .find(row => row.startsWith('access_token='))
+    //     ?.split('=')[1];
+    // return token;
 }
 
 export function getInitData(){

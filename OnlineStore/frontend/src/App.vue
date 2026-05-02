@@ -48,7 +48,7 @@ function authenticate(){
         return response.json();
     })
     .then(data => {
-        document.cookie = `access_token=${data.accessToken}; Secure; SameSite=Strict; Path=/; Max-Age=604800`;
+        localStorage.setItem('access_token', data.accessToken);
         isAdmin.value=data.isAdmin
 
         const newRoutes = data.isAdmin ? admintRoutes : userRoutes
@@ -84,18 +84,13 @@ function authenticate(){
 
 <template>
   <Loading v-if="!isAuthProcCompleted" />
-  <div v-else class="app" id="app">
+  <div v-else id="app">
     <RouterView />
     <AppFooter v-if="!isAdmin && !route.meta.hideFooter"/>
   </div>
 </template>
 
 <style scoped>
-.app {
-  margin-top: 20px;
-  height: 100%;
-}
-
 header {
   line-height: 1.5;
   max-height: 100vh;
