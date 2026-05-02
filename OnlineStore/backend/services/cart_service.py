@@ -1,9 +1,10 @@
 from OnlineStore.backend.repositories import CartRepo
-from OnlineStore.backend.models import *
+from OnlineStore.backend.models import Cart
+
 
 
 class CartService:
-    def __init__(self, product_service: ProductService):
+    def __init__(self, product_service):
         self.repo = CartRepo()
         self.product_service = product_service
 

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import joinedload
 from sqlalchemy import func
 
+from OnlineStore.backend.models import Cart, CartItem
 from OnlineStore.backend.services import DataBase
 
 

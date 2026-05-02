@@ -4,6 +4,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.dimensions import DimensionHolder, ColumnDimension
 
 from OnlineStore.backend.repositories import *
+from OnlineStore.backend.models import *
 
 PRODUCT_REPO = ProductRepo()
 

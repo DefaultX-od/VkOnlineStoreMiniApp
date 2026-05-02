@@ -3,9 +3,10 @@ import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 
-from OnlineStore.backend.services import ProductService, CartService, OrderService
 
 from dotenv import load_dotenv
+
+from OnlineStore.backend.services import ProductService, CartService, OrderService
 from bot_vk_ng import send_notification
 
 load_dotenv()

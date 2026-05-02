@@ -1,7 +1,7 @@
 from sqlalchemy.orm import joinedload
 
 from OnlineStore.backend.services import DataBase
-
+from OnlineStore.backend.models import Cart, CartItem, Order, OrderStatus, PaymentMethod, DropPoint
 
 class OrderRepo:
     def __init__(self):

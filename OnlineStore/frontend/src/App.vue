@@ -84,13 +84,18 @@ function authenticate(){
 
 <template>
   <Loading v-if="!isAuthProcCompleted" />
-  <div v-else id="app">
+  <div v-else class="app" id="app">
     <RouterView />
     <AppFooter v-if="!isAdmin && !route.meta.hideFooter"/>
   </div>
 </template>
 
 <style scoped>
+.app {
+  margin-top: 20px;
+  height: 100%;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

@@ -1,5 +1,6 @@
 from OnlineStore.backend.repositories import OrderRepo
-from OnlineStore.backend.models import *
+from OnlineStore.backend.models import Cart
+from OnlineStore.backend.services import CartService
 
 
 class OrderService:
