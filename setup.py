@@ -105,4 +105,11 @@ PassengerPython {python_path}
         print('Неудалось создать дирректорию для перезапуска!')
         sys.exit(1)
 
+    try:
+        subprocess.run(['touch', '.img_cache'], check=True)
+        print('Файл кеша изображений создан!')
+    except:
+        print('Неудалось создать файл кеша изображений!')
+        sys.exit(1)
+
 setup_project()
