@@ -64,7 +64,7 @@ def setup_project():
 sys.path.append('{os.path.abspath(os.curdir)}')
 sys.path.append('{os.path.join(os.path.abspath(os.curdir), "OnlineStore", "backend")}')
 sys.path.append('{site_packages_path}')
-from OnlineStore import app as application
+from OnlineStore.backend import app as application
 from werkzeug.debug import DebuggedApplication
 application.wsgi_app = DebuggedApplication(application.wsgi_app, False)
 application.debug = False
