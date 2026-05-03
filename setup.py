@@ -91,7 +91,7 @@ PassengerPython {python_path}
         print(f"Ошибка создания файла: {str(e)}")
         sys.exit(1)
 
-    if not os.path.isdir('public_html'):
+    if not os.path.isdir('public'):
         try:
             subprocess.run(['ln', '-s','public_html', 'public'], check=True)
             print('Необходимые ссылки были созданы успешно!')
