@@ -19,8 +19,6 @@ class OrderRepo:
             orders = db.query(Order).options(
                 joinedload(Order.cart).joinedload(Cart.cart_items).joinedload(CartItem.product)
             ).filter(Order.status_id == status_id, Order.is_completed == False, Order.is_canceled == False).all()
-        for order in orders:
-            print(order.is_canceled, order.is_completed)
         return orders
 
     def get_canceled_orders(self) -> list[Order]:

@@ -1,4 +1,9 @@
+import hashlib
+import hmac
+import base64
 import os
+from urllib.parse import parse_qsl, urlencode
+from collections import OrderedDict
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
@@ -20,11 +25,31 @@ app = Flask(
     static_folder='dist',
     template_folder='dist'
 )
+app.secret_key = os.getenv('vk_client_secret')
 app.config["JWT_SECRET_KEY"] = os.getenv('vk_token')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400
 jwt = JWTManager(app)
 
 ADMIN_ID = os.getenv('vk_admin_id')
+
+
+def verify_vk_signature(query_params_str):
+    if not app.secret_key:
+        return False
+
+    query = dict(parse_qsl(query_params_str, keep_blank_values=True))
+
+    try:
+        vk_subset = OrderedDict(sorted(x for x in query.items() if x[0].startswith("vk_")))
+
+        encoded_params = urlencode(vk_subset, doseq=True).encode()
+        hash_code = hmac.new(app.secret_key.encode(), encoded_params, hashlib.sha256).digest()
+
+        decoded_hash_code = base64.b64encode(hash_code).decode('utf-8')[:-1].replace('+', '-').replace('/', '_')
+
+        return query.get("sign") == decoded_hash_code
+    except Exception:
+        return False
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -34,24 +59,23 @@ def index(path):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, 'index.html')
 
+
 @app.route('/auth', methods=['POST'])
 def auth():
     data = request.get_json()
-    if not data or 'user_id' not in data:
-        return jsonify({"error": "Missing user id"}), 400
-    try:
-        user_id = str(data['user_id'])
-        admin_id = os.getenv('vk_admin_id')
+    launch_params = data.get('launch_params')  # Это вся строка из window.location.search
 
-        is_admin = True if user_id == admin_id else False
+    if not launch_params or not verify_vk_signature(launch_params):
+        return jsonify({"error": "Invalid signature"}), 403
 
-        access_token = create_access_token(identity=user_id)
-        return jsonify({
-            "accessToken": access_token,
-            "isAdmin" : False
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    params_dict = dict(parse_qsl(launch_params))
+    user_id = params_dict.get('vk_user_id')
+
+    access_token = create_access_token(identity=user_id)
+    return jsonify({
+        "accessToken": access_token,
+        "isAdmin": (str(user_id) == False)
+    })
 
 @app.route('/api/admin/init')
 @jwt_required()

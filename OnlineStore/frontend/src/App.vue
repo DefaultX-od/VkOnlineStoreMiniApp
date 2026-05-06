@@ -24,16 +24,15 @@ onMounted(() => {
 
 function authenticate(){
   const urlParams = new URLSearchParams(window.location.search);
-  const vkParams = Object.fromEntries(urlParams.entries());
 
   if(urlParams.has('vk_app_id')){
     const currentPath = window.location.pathname + window.location.search + window.location.hash
-    const userId = vkParams.vk_user_id
+    const launchParams = window.location.search.slice(1);
 
     fetch('/auth', {
         method: 'POST',
         body: JSON.stringify({
-            user_id: userId
+            launch_params: launchParams
         }),
         headers: {
             'Content-Type': 'application/json'
