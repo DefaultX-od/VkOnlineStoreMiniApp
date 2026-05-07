@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import SectionTitle from './SectionTitle.vue';
-import { orderStateLables } from '@/store';
+import { computed } from 'vue'
+import SectionTitle from './SectionTitle.vue'
+import { orderStateLables } from '@/store'
 
 const props = defineProps({
     statuses: Array,

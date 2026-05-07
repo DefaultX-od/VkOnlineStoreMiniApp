@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import GalleryObject from './GalleryObject.vue';
+import { onMounted, ref } from 'vue'
+import GalleryObject from './GalleryObject.vue'
 
 
 const props = defineProps({
@@ -30,30 +30,38 @@ function reloadGallery(){
 }
 
 function onTouchStart(event){
-    if (!gallery.value || !gallery.value.contains(event.target)) return;
+    if (!gallery.value || !gallery.value.contains(event.target)) {
+        return
+    }
     isTouchingGallery.value = true
     startX.value = event.touches[0].clientX
 }
 
 function onTouchMove(event){
-    if (!isTouchingGallery.value) return;
+    if (!isTouchingGallery.value) {
+        return
+    }
     event.preventDefault()
     endX.value = event.touches[0].clientX
 }
 function onTouchEnd(){
-    if (!isTouchingGallery.value) return;
-    let diff = startX.value - endX.value;
+    if (!isTouchingGallery.value) {
+        return
+    }
+
+    let diff = startX.value - endX.value
 
     if (diff > 50 && active.value < props.album.length - 1) {
-        active.value += 1;
-    } else if (diff < -50 && active.value > 0) {
-        active.value -= 1;
+        active.value += 1
     }
-    reloadGallery();
-    isTouchingGallery.value = false;
+    else if (diff < -50 && active.value > 0) {
+        active.value -= 1
+    }
+    reloadGallery()
+    isTouchingGallery.value = false
 }
 onMounted(() => {
-    reloadGallery();
+    reloadGallery()
 });
 </script>
 

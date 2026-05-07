@@ -18,19 +18,28 @@ export function useOrderFetch(orderId) {
             })
             .then(response =>{
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    if (response.status === 401) {
+                        throw new Error('Unauthorized access')
+                    }
+                    else if (response.status === 403) {
+                        throw new Error('Forbidden')
+                    }
+                    else if (response.status === 404) {
+                        throw new Error('Order not found')
+                    }
+                    throw new Error('Server error')
                 }
                 return response.json();
             })
             .then(data => {
                 orderData.value = data.orderData
-                statusesData.value = data.statuses;
+                statusesData.value = data.statuses
             })
             .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
+                console.error('Fetch order failed:', error)
             })
             .finally(() => {
-                loading.value = false;
+                loading.value = false
             })
     }
 

@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import CategoriesGrid from '@/components/CategoriesGrid.vue'
 import Loading from '@/components/LoadingScreenGrid.vue'
 
-const groups = ref([]); 
-const loading = ref(true);
-const showLoadingScreen = ref(false);
+const groups = ref([])
+const loading = ref(true)
+const showLoadingScreen = ref(false)
 
 setTimeout(()=>{
     showLoadingScreen.value = true
@@ -14,7 +14,7 @@ setTimeout(()=>{
 fetch('/api/categories')
 .then(response =>{
     if(!response){
-        throw new Error('Network response was not ok')
+        throw new Error('Server error')
     }
     return response.json();
 })
@@ -22,7 +22,7 @@ fetch('/api/categories')
     groups.value = data
 })
 .catch(error =>{
-    console.error('There was a problem with the fetch operation:', error);
+    console.error('Failed to fetch categories:', error);
 })
 .finally(() =>{
     loading.value = false

@@ -1,21 +1,19 @@
 <script setup>
-import bridge from '@vkontakte/vk-bridge';
-import { onMounted, ref } from 'vue';
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
-import { appWarehouse } from './store';
+import bridge from '@vkontakte/vk-bridge'
+import { onMounted, ref } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import AppFooter from './components/AppFooter.vue'
-import Loading from './components/LoadingScreenGrid.vue';
-import { getInitData } from './utils/misc';
-import { admintRoutes } from './router/adminRoutes';
-import { userRoutes } from './router/userRoutes';
+import Loading from './components/LoadingScreenGrid.vue'
+import { getInitData } from './utils/misc'
+import { admintRoutes } from './router/adminRoutes'
+import { userRoutes } from './router/userRoutes'
 
 var isAdmin = ref(false)
 var isAuthProcCompleted = ref(false)
 
 const route = useRoute();
 const router = useRouter();
-
 
 onMounted(() => {
   bridge.send("VKWebAppInit")
@@ -27,7 +25,7 @@ function authenticate(){
 
   if(urlParams.has('vk_app_id')){
     const currentPath = window.location.pathname + window.location.search + window.location.hash
-    const launchParams = window.location.search.slice(1);
+    const launchParams = window.location.search.slice(1)
 
     fetch('/auth', {
         method: 'POST',
@@ -39,15 +37,16 @@ function authenticate(){
         }
     })
     .then(response => {
-        if (response.status === 422) {
-            return response.json().then(err => {
-                throw new Error(`Validation error: ${JSON.stringify(err)}`);
-            });
+        if (!response.ok) {
+          if (response.status === 400) {
+            throw new Error('Bad request')
+          }
+          throw new Error('Server error')
         }
         return response.json();
     })
     .then(data => {
-        localStorage.setItem('access_token', data.accessToken);
+        localStorage.setItem('access_token', data.accessToken)
         isAdmin.value=data.isAdmin
 
         const newRoutes = data.isAdmin ? admintRoutes : userRoutes
@@ -73,7 +72,7 @@ function authenticate(){
 
     })
     .catch(error => {
-        console.error('Auth error:', error);
+        console.error('Auth error:', error)
     });
   }
 }
@@ -99,8 +98,6 @@ header {
   display: block;
   margin: 0 auto 2rem;
 }
-
-
 
 @media (min-width: 1024px) {
   header {

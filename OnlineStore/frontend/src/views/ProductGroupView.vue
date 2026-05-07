@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-import Loading from '@/components/LoadingScreenGrid.vue';
-import ProductsGrid from '@/components/ProductsGrid.vue';
+import Loading from '@/components/LoadingScreenGrid.vue'
+import ProductsGrid from '@/components/ProductsGrid.vue'
 
 var loading = ref(true)
 var groups = ref([])
@@ -16,18 +16,21 @@ const props = defineProps({
 fetch(`/api/group?group_id=${props.group_id}&category_id=${props.category_id}`)
 .then(response =>{
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status === 404) {
+            throw new Error('Not found')
+        }
+        throw new Error('Server error')
     }
-    return response.json();
+    return response.json()
 })
 .then(data => {
-    groups.value = data;
+    groups.value = data
 })
 .catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
+    console.error('Fetch group failed:', error)
 })
 .finally(() => {
-    loading.value = false;
+    loading.value = false
 })
 
 setTimeout(()=>{ showLoadingScreen.value = true }, 300)

@@ -20,8 +20,10 @@ class ProductService:
                 dic[group.id]['categories'].append(category.to_dic())
         return dic
 
-    def retrieve_category(self, id: int) -> dict:
+    def retrieve_category(self, id: int) -> dict | None:
         grouped_products = self.repo.get_category(id)
+        if not grouped_products:
+            return None
         dic = {}
         for group in grouped_products:
             group.products = group.products[:2]
@@ -34,15 +36,18 @@ class ProductService:
                     dic[group.id]['products'].append(product.to_dic())
         return dic
 
-    def retrieve_group(self, group_id: int, category_id: int) -> dict:
+    def retrieve_group(self, group_id: int, category_id: int) -> dict | None:
         grouped_products = self.repo.get_group(group_id, category_id)
-        dic = {}
-        for group in grouped_products:
-            dic[group.id] = group.to_dic()
-            for product in group.products:
-                self.finalize_product(product)
-                dic[group.id]['products'].append(product.to_dic())
-        return dic
+        if grouped_products:
+            dic = {}
+            for group in grouped_products:
+                dic[group.id] = group.to_dic()
+                for product in group.products:
+                    self.finalize_product(product)
+                    dic[group.id]['products'].append(product.to_dic())
+            return dic
+        else:
+            return None
 
     def retrieve_product(self, id: int) -> dict | None:
         product = self.repo.get_product_by_id(id)

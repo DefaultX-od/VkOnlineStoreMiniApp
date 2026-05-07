@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
 import { computed } from 'vue'
-import { appWarehouse } from '@/store';
+import { appWarehouse } from '@/store'
 
 const props = defineProps({
   link: String,
@@ -12,12 +12,12 @@ const props = defineProps({
   noteName: String
 })
 
-const route = useRoute();
+const route = useRoute()
 const isActive = computed(() => {
     if (props.link === '/') {
-        return route.path === props.link;
+        return route.path === props.link
     }
-    return route.path.startsWith(props.link);
+    return route.path.startsWith(props.link)
 })
 </script>
 

@@ -1,7 +1,6 @@
 <script setup>
 import plusIcon from '@/assets/icons/plus.png'
 import minusIcon from '@/assets/icons/minus.png'
-import addToCartIcon from '@/assets/icons/cart.png'
 
 const emit = defineEmits([
     'clickAddToCartBtn',
@@ -20,9 +19,9 @@ const props = defineProps({
     }
 })
 
-const handleAdd = () => emit('clickAddToCartBtn');
-const handleIncrement = () => emit('clickIncrementCartItemBtn');
-const handleDecrement = () => emit('clickDecrementCartItemBtn');
+const handleAdd = () => emit('clickAddToCartBtn')
+const handleIncrement = () => emit('clickIncrementCartItemBtn')
+const handleDecrement = () => emit('clickDecrementCartItemBtn')
 </script>
 
 <template>

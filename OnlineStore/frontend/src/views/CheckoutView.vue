@@ -26,7 +26,10 @@
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                if (response.status === 401){
+                    throw new Error('Unauthorized access');
+                }
+                throw new Error('Server error');
             }
             return response.json()
         })
@@ -35,7 +38,7 @@
             dropPoints.value = data.dropPoints
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error)
+            console.error('Fetch order options failed', error)
         })
         .finally(() =>{
             loading.value = false
@@ -65,7 +68,7 @@
             router.replace(`/orders/order/${data.order_id}`)
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error)
+            console.error('Fetch checkout failed:', error)
         })
         .finally(() =>{
             loading.value = false

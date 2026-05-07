@@ -1,9 +1,9 @@
 <script setup>
-import { getProductWordAccordingToQuantity } from '@/utils/misc';
-import { computed, ref } from 'vue';
+import { getProductWordAccordingToQuantity } from '@/utils/misc'
+import { computed } from 'vue'
 
 import imagePlaceholder from '@/assets/icons/no-img.png'
-import { orderStateLables } from '@/store';
+import { orderStateLables } from '@/store'
 
 const props = defineProps({
     orderStatus: String,
@@ -21,7 +21,7 @@ const statusLabel = computed(() =>{
     return props.orderStatus
 })
 
-const validSrc = (img) => img ? img : imagePlaceholder;
+const validSrc = (img) => img ? img : imagePlaceholder
 </script>
 
 <template>

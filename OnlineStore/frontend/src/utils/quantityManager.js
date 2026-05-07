@@ -11,20 +11,23 @@ export function incrementItem(productId){
     })
     .then(response =>{
         if (!response.ok) {
-            throw new Error('Ошибка')
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
-        return response.json();
+        return response.json()
     })
     .then(data => {
         getInitData()
         return data
     })
     .catch(error =>{
-        console.error('Ошибка добавления отвара в корзину');
+        console.error('Error item increment', error);
     });
 }
 
-export function decrementItem(productId, count){
+export function decrementItem(productId){
     return fetch('/api/cart/item/decrement', {
         method: 'POST',
         headers:{
@@ -35,16 +38,19 @@ export function decrementItem(productId, count){
     })
     .then(response =>{
         if (!response.ok) {
-            throw new Error('Ошибка')
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
-        return response.json();
+        return response.json()
     })
     .then(data => {
         getInitData()
         return data
     })
     .catch(error =>{
-        console.error('Ошибка добавления отвара в корзину');
+        console.error('Error item decrement', error)
     });
 }
 
@@ -59,16 +65,19 @@ export function addItem(productId){
     })
     .then(response =>{
         if (!response.ok) {
-            throw new Error('Ошибка')
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
-        return response.json();
+        return response.json()
     })
     .then(data => {
         getInitData()
         return 1
     })
     .catch(error =>{
-        console.error('Ошибка добавления отвара в корзину');
+        console.error('Error add item', error)
     });
 }
 
@@ -83,15 +92,18 @@ export function deleteItem(productId){
     })
     .then(response =>{
         if (!response.ok) {
-            throw new Error('Ошибка')
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
-        return response.json();
+        return response.json()
     })
     .then(data => {
         getInitData()
         return 0
     })
     .catch(error =>{
-        console.error('Ошибка добавления отвара в корзину');
+        console.error('Error delete item', error)
     });
 }

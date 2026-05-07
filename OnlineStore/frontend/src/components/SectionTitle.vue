@@ -1,6 +1,6 @@
 <script setup>
 import expandIcon from '@/assets/icons/right-arrow.png'
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
     title:{

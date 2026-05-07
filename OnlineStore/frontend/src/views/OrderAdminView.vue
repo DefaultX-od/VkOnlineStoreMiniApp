@@ -25,10 +25,10 @@ const nextStatusInfo = computed(()=>{
   if(!order.status_id || !statuses.length) return null
 
   const currentIndex = statuses.findIndex(s => s.id === order.status_id)
-  const isLastStatus = currentIndex === statuses.length - 1;
+  const isLastStatus = currentIndex === statuses.length - 1
 
   if (isLastStatus) {
-    return { isFinalStep: true, label: 'Заказ выдан' };
+    return { isFinalStep: true, label: 'Заказ выдан' }
   }
 
   return {
@@ -53,15 +53,24 @@ function updateOrderStatus(){
   })
   .then(response =>{
       if (!response.ok) {
-          throw new Error('Network response was not ok');
+        if (response.status === 400) {
+          throw new Error('Bad Request')
+        }
+        else if (response.status === 401) {
+          throw new Error('Unauthorized access')
+        }
+        else if (response.status === 403) {
+          throw new Error('Forbidden')
+        }
+        throw new Error('Server error')
       }
-      return response.json();
+      return response.json()
   })
   .then(data => {
       refetch()
   })
   .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error('Updating order status failed:', error)
   })
   .finally(() => {
   })

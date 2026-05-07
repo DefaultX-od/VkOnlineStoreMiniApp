@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 import noImg from '@/assets/icons/no-img.png' 
 

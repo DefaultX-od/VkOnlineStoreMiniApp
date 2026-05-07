@@ -15,7 +15,10 @@ function fetchAdminInitData(){
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok')
+            if (response.status === 403) {
+                throw new Error('Forbidden');
+            }
+            throw new Error('Server error');
         }
         return response.json()
     })
@@ -23,7 +26,7 @@ function fetchAdminInitData(){
         statuses.value = data.statuses
     })
     .catch(error => {
-        console.error('There was a problem with the fetch operation:', error)
+        console.error('Auth failed:', error)
     })
     .finally(() =>{
         loading.value = false
@@ -33,8 +36,6 @@ function fetchAdminInitData(){
 onMounted(() =>{
     fetchAdminInitData()
 })
-
-
 
 const orderStates = [
     {
@@ -49,8 +50,8 @@ const orderStates = [
     }
 
 ]
-
 </script>
+
 <template>
     <div class="dashboard">
         <Grid>

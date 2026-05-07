@@ -3,7 +3,7 @@
         item: Object,
         parentForm: String
     })
-    const model = defineModel('selectedModel');
+    const model = defineModel('selectedModel')
 </script>
 
 <template>
@@ -31,12 +31,12 @@
 <style scoped>
 label {
     display: block;
-    background: #EAEAEA; /* Серый по умолчанию */
+    background: #EAEAEA;
     border-radius: 8px;
     padding: 10px 10px;
     cursor: pointer;
     font-family: Arial, Helvetica, sans-serif;
-    transition: background-color 0.2s; /* Для плавности */
+    transition: background-color 0.2s;
 }
 .flex-row{
     display: flex;
@@ -53,6 +53,5 @@ input[type="radio"] {
 input[type="radio"]:checked + label {
     background-color: rgba(84, 150, 79, 0.3);
     font-weight: bold;
-    /* color:#fff; */
 }
 </style>

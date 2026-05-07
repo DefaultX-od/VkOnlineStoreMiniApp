@@ -2,7 +2,7 @@
 import activeIcon from '@/assets/icons/like-active.png'
 import inActiveIcon from '@/assets/icons/likes.png'
 
-const emit = defineEmits(['clickLikeBtn']);
+const emit = defineEmits(['clickLikeBtn'])
 
 const props = defineProps({
     isActive:{
@@ -31,6 +31,5 @@ const handleClick = () => {
     text-align: center;
     width: 28px;
     height: 28px;
-    /* margin: auto; */
 }
 </style>

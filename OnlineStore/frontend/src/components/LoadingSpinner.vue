@@ -3,11 +3,11 @@ import spinnerIcon from '@/assets/spinner.gif'
 </script>
 
 <template>
-    <div class="loading-container" style="display: flex;">
+    <div class="loading-container">
          <img :src="spinnerIcon" class="loading-img">
     </div>
 </template>
-<style>
+<style scoped>
 .loading-container {
     position: absolute;
     top: 50%;

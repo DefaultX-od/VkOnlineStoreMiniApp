@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 import Cart from '@/components/Cart.vue'
 import Loading from '@/components/LoadingSpinner.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import OrderStatusSection from '@/components/OrderStatusSection.vue'
-
 import { useOrderFetch } from '@/composables/fetchOrder'
 import { getAuthToken } from '@/utils/misc'
 import OrderDetailsSection from '@/components/OrderDetailsSection.vue'
@@ -28,15 +27,15 @@ function confirmCancelOrder(){
 }
 
 function handleConfirm(confirmed){
-    showConfirm.value = false;
+    showConfirm.value = false
     if(confirmed && pendingAction.value){
-    pendingAction.value();
-    pendingAction.value = null;
+      pendingAction.value()
+      pendingAction.value = null
     }
 }
 
 function cancelOrder(){
-  fetch(`/api/order/cancel?order_id=${props.id}`,{
+  fetch(`?order_id=${props.id}`,{
     headers: {
       'Authorization': `Bearer ${getAuthToken()}`,
       'Content-Type': 'application/json'
@@ -44,7 +43,13 @@ function cancelOrder(){
   })
   .then(response =>{
       if (!response.ok) {
-          throw new Error('Network response was not ok');
+        if (response.status === 401) {
+          throw new Error('Unauthorized access')
+        }
+        else if (response.status === 404) {
+          throw new Error('Not found')
+        }
+        throw new Error('Server error')
       }
       return response.json();
   })
@@ -52,7 +57,7 @@ function cancelOrder(){
       orderData.value.is_canceled = data.is_canceled
   })
   .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error('Cancel order failed:', error)
   })
   .finally(() => {
   })

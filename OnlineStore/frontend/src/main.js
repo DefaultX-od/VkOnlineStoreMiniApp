@@ -8,21 +8,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-const tg = window.Telegram?.WebApp
-if (tg) {
-  router.afterEach((to, from) => {
-    if (to.path !== '/') {
-      tg.BackButton.show()
-    } else {
-      tg.BackButton.hide()
-    }
-  })
-
-  tg.BackButton.onClick(() => {
-    window.history.back()
-  })
-}
-
 const app = createApp(App)
 
 app.use(router)

@@ -63,10 +63,10 @@ def index(path):
 @app.route('/auth', methods=['POST'])
 def auth():
     data = request.get_json()
-    launch_params = data.get('launch_params')  # Это вся строка из window.location.search
+    launch_params = data.get('launch_params')
 
     if not launch_params or not verify_vk_signature(launch_params):
-        return jsonify({"error": "Invalid signature"}), 403
+        return jsonify(), 400
 
     params_dict = dict(parse_qsl(launch_params))
     user_id = params_dict.get('vk_user_id')
@@ -104,14 +104,20 @@ def get_categories():
 def get_category():
     category_id = request.args.get('category_id')
     category = PRODUCT_SERVICE.retrieve_category(category_id)
-    return jsonify(category), 200
+    if category:
+        return jsonify(category), 200
+    else:
+        return  jsonify(), 404
 
 @app.route('/api/group')
 def get_group():
     group_id = request.args.get('group_id')
     category_id = request.args.get('category_id')
     group = PRODUCT_SERVICE.retrieve_group(group_id, category_id)
-    return jsonify(group), 200
+    if group:
+        return jsonify(group), 200
+    else:
+        return jsonify(), 404
 
 
 @app.route('/api/product')

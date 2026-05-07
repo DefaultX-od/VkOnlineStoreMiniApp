@@ -3,7 +3,7 @@ import Loading from '@/components/LoadingSpinner.vue'
 import Cart from '@/components/Cart.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
-import { getProductWordAccordingToQuantity, getAuthToken, getInitData } from '@/utils/misc'
+import { getAuthToken, getInitData } from '@/utils/misc'
 import { onMounted, ref } from 'vue'
 
 var id = ref(0)
@@ -32,34 +32,37 @@ function fetchCart(){
     })
     .then(response => {
         if (!response.ok) {
-        throw new Error('Network response was not ok');
+            if (response.status === 401){
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
         return response.json();
     })
     .then(data => {
-        items.value = data.items;
-        itemsCount.value = data.items_count;
-        fullPrice.value = data.full_price;
-        totalDiscount.value = data.total_discount;
-        total.value = data.total;
+        items.value = data.items
+        itemsCount.value = data.items_count
+        fullPrice.value = data.full_price
+        totalDiscount.value = data.total_discoun
+        total.value = data.total
     })
     .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('Fetch cart failed:', error)
     })
     .finally(() => {
-        loading.value = false;
+        loading.value = false
     })
 }
 
 function syncCartItemCount(productId, newCount) {
     if(newCount===0 && itemsCount.value===1){
-    itemsCount.value = 0;
+        itemsCount.value = 0
     }
     items.value.forEach(item => {
-    if (item.product.id == productId) {
-        item.quantity = newCount;
-        refreshCartSummary()
-    }
+        if (item.product.id == productId) {
+            item.quantity = newCount
+            refreshCartSummary()
+        }
     })
 }
 
@@ -73,18 +76,21 @@ function refreshCartSummary() {
     })
     .then(response => {
         if (!response.ok) {
-        throw new Error('Network response was not ok');
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            throw new Error('Server error')
         }
         return response.json();
     })
     .then(data => {
-        itemsCount.value = data.items_count;
-        fullPrice.value = data.full_price;
-        totalDiscount.value = data.total_discount;
-        total.value = data.total;
+        itemsCount.value = data.items_count
+        fullPrice.value = data.full_price
+        totalDiscount.value = data.total_discount
+        total.value = data.total
     })
     .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error('Refresh cart summary failed:', error)
     })
     .finally(()=>{
         updating.value = false;
@@ -98,10 +104,10 @@ function confirmClearCart(){
 }
 
 function handleConfirm(confirmed){
-    showConfirm.value = false;
+    showConfirm.value = false
     if(confirmed && pendingAction.value){
-    pendingAction.value();
-    pendingAction.value = null;
+        pendingAction.value()
+        pendingAction.value = null
     }
 }
 
@@ -113,17 +119,23 @@ function clearCart(){
     }
     })
     .then(response => {
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
-    })
-    .then(data => {
-        fetchCart()
-        getInitData()
-    })
-    .catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Unauthorized access')
+            }
+            else if (response.status === 403) {
+                throw new Error('Forbidden')
+            }
+            throw new Error('Server error')
+        }
+        return response.json();
+        })
+        .then(data => {
+            fetchCart()
+            getInitData()
+        })
+        .catch(error => {
+        console.error('Clear cart failed:', error);
     })
 }
 

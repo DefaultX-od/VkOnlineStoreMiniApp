@@ -36,42 +36,45 @@ headers:{
 })
 .then(response => {
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status === 401) {
+            throw new Error('Unauthorized access')
+        }
+        else if (response.status === 404) {
+            throw new Error('Product not found')
+        }
+        throw new Error('Server error')
     }
-    return response.json();
+    return response.json()
 })
 .then(data => {
-    name.value = data.product.name;
-    price.value = data.product.price;
-    discountPrice.value = data.product.discount_price;
-    discount.value = data.product.discount;
-    album.value = data.product.album;
-    details.value = data.product.details;
-    cartCount.value = data.count;
-    isOnFavList.value = data.fav_status;
+    name.value = data.product.name
+    price.value = data.product.price
+    discountPrice.value = data.product.discount_price
+    discount.value = data.product.discount
+    album.value = data.product.album
+    details.value = data.product.details
+    cartCount.value = data.count
+    isOnFavList.value = data.fav_status
 })
 .catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
+    console.error('Fetch product failed:', error)
 })
 .finally(() => {
-    loading.value = false;
+    loading.value = false
 })
 
 function onClickAddToCartBtn(){
-    addItem(props.id);
-    cartCount.value = 1;
+    addItem(props.id)
+    cartCount.value = 1
 }
-// function onClickIncrementCartItemBtn(){
-//     cartCount.value = incrementItem(props.id);
-// }
+
 async function onClickIncrementCartItemBtn(){
     try {
         isCartControlsEnabled.value = false
         cartCount.value = await incrementItem(props.id)
-        console.log('Новое количество в корзине:', cartCount.value)
     }
     catch (error) {
-        console.error('Не удалось обновить счетчик корзины:', error)
+        console.error('Failed to update cart count:', error)
     }
     finally{
         isCartControlsEnabled.value = true
@@ -87,10 +90,9 @@ async function onClickDecrementCartItemBtn(){
         try {
             isCartControlsEnabled.value = false
             cartCount.value = await decrementItem(props.id)
-            console.log('Новое количество в корзине:', cartCount.value)
         }
         catch (error) {
-            console.error('Не удалось обновить счетчик корзины:', error);
+            console.error('Failed to update cart count:', error)
         }
         finally{
             isCartControlsEnabled.value = true
@@ -117,18 +119,18 @@ function onClickLikeBtn(){
     })
     .then(response =>{
         if (!response.ok) {
-            throw new Error('Ошибка')
+            throw new Error('Server error')
         }
-        return response.json();
+        return response.json()
     })
     .then(data => {
-        isOnFavList.value = data;
+        isOnFavList.value = data
     })
     .catch(error =>{
-        console.error('Ошибка изменения статуса товара в избранном');
+        console.error('Failed to set fav status:', error)
     })
     .finally(() =>{
-        isFavBtnEnabled.value = true;
+        isFavBtnEnabled.value = true
     })
 }
 
@@ -185,8 +187,6 @@ setTimeout(()=>{ showLoadingScreen = true }, 300)
 .details-container{
     display: flex;
     flex-direction: column;
-    /* gap: 10px; */
-    /* margin-top: 10px; */
     background-color: var(--color-bg-secondary);
     border-radius: 25px;
 }
@@ -202,10 +202,6 @@ setTimeout(()=>{ showLoadingScreen = true }, 300)
     gap: 15px;
 }
 
-.section-main .section-sub-col {
-    /* padding: 10px; */
-}
-
 .section-sub-col {
     display: flex;
     flex-direction: row;
@@ -219,9 +215,7 @@ setTimeout(()=>{ showLoadingScreen = true }, 300)
     background-color: var(--color-bg-secondary);
     display: flex;
     flex-direction:column;
-    /* gap: 10px; */
     gap: 20px;
-    /* padding: 10px; */
     padding: 15px;
     border-radius: 25px;
 }
@@ -244,8 +238,6 @@ setTimeout(()=>{ showLoadingScreen = true }, 300)
 }
 
 hr{
-    /* width: 95%;
-    margin: auto; */
     border-color: var(--color-border);
     border-radius: 25px;
     border-style:solid;

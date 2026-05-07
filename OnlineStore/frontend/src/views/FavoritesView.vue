@@ -15,18 +15,21 @@ headers:{
 })
 .then(response =>{
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status === 401){
+            throw new Error('Unauthorized access')
+        }
+        throw new Error('Server error')
     }
-    return response.json();
+    return response.json()
 })
 .then(data => {
-    groups.value = data;
+    groups.value = data
 })
 .catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
+    console.error('Fetch favorites failed:', error)
 })
 .finally(() => {
-    loading.value = false;
+    loading.value = false
 })
 
 setTimeout(()=>{ showLoadingScreen.value = true }, 300)

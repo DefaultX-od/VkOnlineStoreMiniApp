@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 import CategoriesGrid from '@/components/CategoriesGrid.vue'
 import LoadingScreenGrid from '@/components/LoadingScreenGrid.vue'
@@ -10,28 +10,28 @@ var groups = ref([])
 
 fetch('/api/categories')
 .then(response =>{
-  if (!response.ok) {
-      throw new Error('Network response was not ok');
+  if (!response) {
+      throw new Error('Server error')
     }
-    return response.json();
+    return response.json()
 })
 .then(data => {
       groups.value = data;
 })
 .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error('Failed to fetch categories:', error)
 })
 .finally(() => {
-      loading.value = false;
+      loading.value = false
 })
 
 setTimeout(()=>{
-  showLoadingScreen.value = true;
+  showLoadingScreen.value = true
 }, 300)
 </script>
 
 <template>
-  <Loading v-if="loading && showLoadingScreen" :sectionCount="2" :itemsPerSection="4" :isProductGrid="false"/>
+  <LoadingScreenGrid v-if="loading && showLoadingScreen" :sectionCount="2" :itemsPerSection="4" :isProductGrid="false"/>
   <div v-if="!loading" class="home fade-in">
     <CategoriesGrid :groups="groups"/>
   </div>

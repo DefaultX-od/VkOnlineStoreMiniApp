@@ -25,42 +25,42 @@ const props = defineProps({
 const validSrc = computed (() => props.img && props.img !== null ? props.img : imagePlaceholder)
 
 function onClickIncrementCartItemBtn(){
-    cartControlsEnabled.value = false;
+    cartControlsEnabled.value = false
     incrementItem(props.productId)
     .then(newCount => {
-        emit('syncCartItemCount', props.productId, newCount);
+        emit('syncCartItemCount', props.productId, newCount)
     })
     .finally(()=>{
-            cartControlsEnabled.value = true;
+            cartControlsEnabled.value = true
     });
 }
 function onClickDecrementCartItemBtn(){
-    cartControlsEnabled.value = false;
+    cartControlsEnabled.value = false
     if (props.cartCount == 1){
         deleteItem(props.productId)
         .then(newCount => {
-            emit('syncCartItemCount', props.productId, newCount);
+            emit('syncCartItemCount', props.productId, newCount)
         })
         .finally(()=>{
-            cartControlsEnabled.value = true;
+            cartControlsEnabled.value = true
         });
     }
     else{
         decrementItem(props.productId)
         .then(newCount => {
-            emit('syncCartItemCount', props.productId, newCount);
+            emit('syncCartItemCount', props.productId, newCount)
         })
         .finally(()=>{
-            cartControlsEnabled.value = true;
+            cartControlsEnabled.value = true
         });
     }   
 
 }
 function onClickDeleteCartItemBtn(){
-    cartControlsEnabled.value = false;
+    cartControlsEnabled.value = false
     deleteItem(props.productId)
     .then(newCount => {
-        emit('syncCartItemCount', props.productId, newCount);
+        emit('syncCartItemCount', props.productId, newCount)
     });
 }
 

@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import OrderCard from '@/components/OrderCard.vue';
-import { getAuthToken } from '@/utils/misc';
+import { onMounted, ref } from 'vue'
+import OrderCard from '@/components/OrderCard.vue'
+import { getAuthToken } from '@/utils/misc'
 
 var orders = ref([])
 var loading = ref(true)
@@ -23,15 +23,24 @@ function fetchOrdersAdmin(){
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                if (response.status === 400) {
+                    throw new Error('Bad Request')
+                }
+                else if (response.status === 401) {
+                    throw new Error('Unauthorized access')
+                }
+                else if (response.status === 403) {
+                    throw new Error('Forbidden')
+                }
+                throw new Error('Server error')
             }
-            return response.json()
+            return response.json();
         })
         .then(data => {
             orders.value = data
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error)
+            console.error('Fetch orders failed:', error)
         })
         .finally(() =>{
             loading.value = false

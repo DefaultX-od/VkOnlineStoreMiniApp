@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import OrderCard from '@/components/OrderCard.vue';
-import { getAuthToken } from '@/utils/misc';
+import { onMounted, ref } from 'vue'
+import OrderCard from '@/components/OrderCard.vue'
+import { getAuthToken } from '@/utils/misc'
 
 var orders = ref([])
 var loading = ref(true)
@@ -15,7 +15,10 @@ function fetchOrders(){
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                if (response.status === 401) {
+                    throw new Error('Unauthorized access')
+                }
+                throw new Error('Server error')
             }
             return response.json()
         })
@@ -23,7 +26,7 @@ function fetchOrders(){
             orders.value = data
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error)
+            console.error('Fetch orders failed:', error)
         })
         .finally(() =>{
             loading.value = false

@@ -1,7 +1,7 @@
 <script setup>
-import SectionTitle from './SectionTitle.vue';
-import Grid from './Grid.vue';
-import GridObject from './GridObject.vue';
+import SectionTitle from './SectionTitle.vue'
+import Grid from './Grid.vue'
+import GridObject from './GridObject.vue'
 
 const props = defineProps({
     sectionCount:{
