@@ -43,7 +43,7 @@ function fetchCart(){
         items.value = data.items
         itemsCount.value = data.items_count
         fullPrice.value = data.full_price
-        totalDiscount.value = data.total_discoun
+        totalDiscount.value = data.total_discount
         total.value = data.total
     })
     .catch(error => {
