@@ -44,8 +44,10 @@ class ProductService:
                 dic[group.id]['products'].append(product.to_dic())
         return dic
 
-    def retrieve_product(self, id: int) -> dict:
+    def retrieve_product(self, id: int) -> dict | None:
         product = self.repo.get_product_by_id(id)
+        if not product:
+            return None
         self.finalize_product(product)
         self._populate_details(product)
         dic = product.to_dic()
@@ -118,21 +120,3 @@ class ProductService:
     def delete_product_from_favorites(self, product_id, user_id):
         self.repo.remove_favorite_item(product_id, user_id)
         return False
-
-    # Для бота
-
-    # def get_main_categories(self):
-    #     pass
-    #
-    # def get_categories_groups(self):
-    #     pass
-    #
-    # def get_product_groups(self):
-    #     pass
-    #
-    # def get_products(self):
-    #     pass
-    #
-    # def get_category_details(self):
-    #     pass
-

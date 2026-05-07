@@ -81,12 +81,11 @@ def auth():
 @jwt_required()
 def get_admin_init_data():
     user_id = get_jwt_identity()
-
     if str(user_id) == ADMIN_ID:
         statuses = ORDER_SERVICE.retrieve_order_statuses()
         return jsonify(statuses=statuses), 200
     else:
-        return (), 403
+        return jsonify(), 403
 
 
 @app.route('/api/init')
@@ -105,14 +104,14 @@ def get_categories():
 def get_category():
     category_id = request.args.get('category_id')
     category = PRODUCT_SERVICE.retrieve_category(category_id)
-    return jsonify(category)
+    return jsonify(category), 200
 
 @app.route('/api/group')
 def get_group():
     group_id = request.args.get('group_id')
     category_id = request.args.get('category_id')
     group = PRODUCT_SERVICE.retrieve_group(group_id, category_id)
-    return jsonify(group)
+    return jsonify(group), 200
 
 
 @app.route('/api/product')
@@ -121,9 +120,11 @@ def get_product_data():
     user_id = get_jwt_identity()
     product_id = request.args.get('product_id')
     product = PRODUCT_SERVICE.retrieve_product(product_id)
-    cart_count = CART_SERVICE.get_item_quantity(product_id, user_id)
+    if product is None:
+        return jsonify(), 404
     fav_status = PRODUCT_SERVICE.get_fav_status(product_id, user_id)
-    return jsonify(product=product, fav_status=fav_status, count = cart_count)
+    cart_count = CART_SERVICE.get_item_quantity(product_id, user_id)
+    return jsonify(product=product, fav_status=fav_status, count = cart_count), 200
 
 @app.route('/api/cart')
 @jwt_required()
@@ -232,8 +233,6 @@ def checkout():
     order_id = ORDER_SERVICE.create_order(user_id, cart, dp, pm)
 
     send_notification(f'У вас новый заказ, номер заказа №{order_id}!', ADMIN_ID, f"https://wokd3r-94-141-53-179.ru.tuna.am/orders/order/{order_id}")
-    f'Заказ №{order_id}, был отменен пользователем!'
-
 
     return jsonify(order_id=order_id), 200
 
@@ -243,7 +242,7 @@ def get_order():
     user_id = get_jwt_identity()
     order_id = request.args.get('order_id')
     statuses = ORDER_SERVICE.retrieve_order_statuses()
-    order = ORDER_SERVICE.retrieve_order(user_id, order_id)
+    order = ORDER_SERVICE.retrieve_order(order_id)
     return jsonify(statuses=statuses, orderData=order), 200
 
 

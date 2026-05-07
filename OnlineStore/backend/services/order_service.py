@@ -40,7 +40,7 @@ class OrderService:
             orders.append(order.to_dic())
         return orders
 
-    def retrieve_order(self, user_id: float, order_id: int) -> dict:
+    def retrieve_order(self, order_id: int) -> dict:
         order = self.repo.get_order_by_id(order_id)
         order.cart = self.cart_service.finalize_cart(order.cart)
         return order.to_dic()
@@ -85,3 +85,8 @@ class OrderService:
         for pm in payment_methods:
             res.append(pm.to_dic())
         return res
+
+    def prepare_payment(self, order_id):
+        order = self.repo.get_order_by_id(order_id)
+        total = self.cart_service.count_total(order.cart)
+        return order.id, total

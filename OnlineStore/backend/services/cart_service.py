@@ -1,5 +1,5 @@
 from OnlineStore.backend.repositories import CartRepo
-from OnlineStore.backend.models import Cart
+from OnlineStore.backend.models import Cart, CartItem
 
 
 
@@ -96,6 +96,12 @@ class CartService:
             self.product_service.finalize_product(item.product)
         self._set_cart_info(cart)
         return cart.to_dic()
+
+    def count_total(self, cart: Cart) -> float:
+        total = 0
+        for item in cart.cart_items:
+            total += item.purchase_price
+        return total
 
     def _set_cart_info(self, cart: Cart) -> Cart:
         items_count = 0
