@@ -1,4 +1,6 @@
 import os
+
+import requests
 from vk_api import VkApi, VkUpload
 from vk_api.utils import get_random_id
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -13,7 +15,7 @@ from workbook_master import create_category_groups_template, \
     create_categories_template, create_product_groups_template, create_products_template, create_drop_points_template, \
     save_doc, construct_category_groups, construct_categories, \
     construct_items, construct_drop_points, construct_item_groups, create_category_details_template, \
-    construct_category_details
+    construct_category_details, get_data_from_file
 
 load_dotenv()
 
@@ -94,6 +96,11 @@ ACTIONS = {
     )
 }
 
+CURRENT_STATE = {
+    'action': None,
+    'operation': None
+}
+
 vk_session = VkApi(token=GROUP_TOKEN, api_version=API_VERSION)
 vk = vk_session.get_api()
 longpoll = VkBotLongPoll(vk_session, group_id=GROUP_ID)
@@ -103,13 +110,13 @@ settings = dict(one_time=False, inline=True)
 upload = VkUpload(vk_session)
 
 
-def send_doc(user_id, file_path):
-    doc = upload.document_message(file_path, title='file.xlsx', peer_id=user_id)['doc']
+def send_doc(user_id, mod):
+    doc = upload.document_message(f'storage/doc_{mod}.xlsx', title=f'doc_{mod}.xlsx', peer_id=user_id)['doc']
     attachment = f"doc{doc['owner_id']}_{doc['id']}"
 
     vk.messages.send(
         peer_id=user_id,
-        message="Лови файл!",
+        message=f'Таблица {ACTIONS[mod][0]}',
         attachment=attachment,
         random_id=0
     )
@@ -138,17 +145,73 @@ def send_notification(text, user_id, url=None):
 if __name__ == '__main__':
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
-            if event.obj.message['text'] != '':
-                if event.from_user:
-                    if 'callback' not in event.obj.client_info['button_actions']:
-                        print(f'Клиент {event.obj.message["from_id"]} не поддерж. callback')
-                    if str(event.obj.message['from_id']) == str(ADMIN_ID):
+            msg = event.obj.message
+            user_id = msg['from_id']
+            attachments = msg.get('attachments', [])
+            text = msg.get('text', '')
+
+            if str(user_id) != str(ADMIN_ID):
+                continue
+
+            if attachments and len(attachments) == 1:
+                if CURRENT_STATE.get('action') and CURRENT_STATE.get('operation'):
+                    mod = CURRENT_STATE.get('action')
+                    operation = CURRENT_STATE.get('operation')
+                    if attachments[0]['type'] == 'doc' and attachments[0]['doc'].get('ext') == 'xlsx':
+                        url = attachments[0]['doc']['url']
+                        file_name = f'upload_{mod}.xlsx'
+                        file_path = f"storage/{file_name}"
+                        response = requests.get(url)
+                        with open(file_path, 'wb') as f:
+                            f.write(response.content)
+
+                        try:
+                            msg_text, template_func, template_data_func, db_action_funcs, extruct_data_func = ACTIONS[mod]
+                            if mod == 'mpb':
+                                data = extruct_data_func(operation, get_data_from_file(file_name))
+                            else:
+                                data = extruct_data_func(get_data_from_file(file_name))
+                            if operation == 'add':
+                                db_action_funcs[0](data)
+                                pass
+                            elif operation == 'edit':
+                                db_action_funcs[1](data)
+
+                            vk.messages.send(
+                                peer_id=user_id,
+                                random_id=get_random_id(),
+                                message="Данные успешно прошли обработку и внесены в базу!"
+                            )
+                            vk.messages.send(
+                                peer_id=user_id,
+                                random_id=get_random_id(),
+                                keyboard=construct_main_menu().get_keyboard(),
+                                message="Главное меню"
+                            )
+
+                            CURRENT_STATE['action'] = None
+                            CURRENT_STATE['operation'] = None
+                        except Exception as e:
+                            vk.messages.send(
+                                peer_id=user_id,
+                                random_id=get_random_id(),
+                                message=f"Произошла ошибка при импорте: {e}"
+                            )
+                    else:
                         vk.messages.send(
-                            user_id=event.obj.message['from_id'],
+                            peer_id=user_id,
                             random_id=get_random_id(),
-                            peer_id=event.obj.message['from_id'],
-                            keyboard=construct_main_menu().get_keyboard(),
-                            message=event.obj.message['text'])
+                            message="Файл должен быть в формате xlsx!"
+                        )
+                        continue
+
+            if text != '':
+                vk.messages.send(
+                    peer_id=user_id,
+                    random_id=get_random_id(),
+                    keyboard=construct_main_menu().get_keyboard(),
+                    message="Главное меню"
+                )
 
         elif event.type == VkBotEventType.MESSAGE_EVENT:
             if '_' in event.object.payload.get('type'):
@@ -186,6 +249,8 @@ if __name__ == '__main__':
 
             elif operation in ('add', 'edit'):
                 if mod in ACTIONS:
+                    CURRENT_STATE['action'] = mod
+                    CURRENT_STATE['operation'] = operation
                     msg_text, template_func, template_data_func, db_action_funcs, extruct_data_func = ACTIONS[mod]
                     vk.messages.send(
                         user_id=event.object.user_id,
@@ -201,7 +266,13 @@ if __name__ == '__main__':
                         random_id=get_random_id(),
                         message='Шаблон сгенерирован. Необходимо заполнить все ячейки в строке для успешной обработки и внесение изменений в интернет магазин.'
                     )
-                    send_doc(event.object.user_id, f'storage/doc_{mod}.xlsx')
+                    send_doc(event.object.user_id, mod)
+                    vk.messages.send(
+                        user_id=event.object.user_id,
+                        peer_id=event.object.peer_id,
+                        random_id=get_random_id(),
+                        message='Перехожу в режим ожидания файла...'
+                    )
 
             elif operation == 'dismiss':
                 vk.messages.delete(
