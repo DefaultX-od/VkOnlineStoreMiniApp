@@ -4,7 +4,6 @@ from OnlineStore.backend.repositories import ProductRepo
 from OnlineStore.backend.models import FavoriteItem, Product, Category
 from .image_service import ImageService
 
-
 class ProductService:
     def __init__(self):
         self.repo = ProductRepo()

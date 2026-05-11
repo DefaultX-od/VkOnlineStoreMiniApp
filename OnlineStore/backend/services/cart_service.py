@@ -1,8 +1,6 @@
 from OnlineStore.backend.repositories import CartRepo
 from OnlineStore.backend.models import Cart, CartItem
 
-
-
 class CartService:
     def __init__(self, product_service):
         self.repo = CartRepo()

@@ -8,7 +8,6 @@ from collections import OrderedDict
 from flask import Flask, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, JWTManager
 
-
 from dotenv import load_dotenv
 
 from OnlineStore.backend.services import ProductService, CartService, OrderService
@@ -25,13 +24,13 @@ app = Flask(
     static_folder='dist',
     template_folder='dist'
 )
+
 app.secret_key = os.getenv('vk_client_secret')
 app.config["JWT_SECRET_KEY"] = os.getenv('vk_token')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 86400
 jwt = JWTManager(app)
 
 ADMIN_ID = os.getenv('vk_admin_id')
-
 
 def verify_vk_signature(query_params_str):
     if not app.secret_key:
@@ -59,7 +58,6 @@ def index(path):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, 'index.html')
 
-
 @app.route('/auth', methods=['POST'])
 def auth():
     data = request.get_json()
@@ -86,7 +84,6 @@ def get_admin_init_data():
         return jsonify(statuses=statuses), 200
     else:
         return jsonify(), 403
-
 
 @app.route('/api/init')
 @jwt_required()
@@ -118,7 +115,6 @@ def get_group():
         return jsonify(group), 200
     else:
         return jsonify(), 404
-
 
 @app.route('/api/product')
 @jwt_required()
@@ -230,7 +226,6 @@ def get_checkout_options():
 @app.route('/api/checkout', methods=['POST'])
 @jwt_required()
 def checkout():
-
     user_id = get_jwt_identity()
     data = request.get_json()
     cart = CART_SERVICE.get_active_cart(user_id)

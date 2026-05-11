@@ -3,7 +3,7 @@ from sqlalchemy.orm import joinedload
 from OnlineStore.backend.services import DataBase
 from OnlineStore.backend.models import *
 
-class ProductRepo():
+class ProductRepo:
     def __init__(self):
         self.db = DataBase()
 

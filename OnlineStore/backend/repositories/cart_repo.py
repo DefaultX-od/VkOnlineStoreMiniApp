@@ -4,7 +4,6 @@ from sqlalchemy import func
 from OnlineStore.backend.models import Cart, CartItem
 from OnlineStore.backend.services import DataBase
 
-
 class CartRepo:
     def __init__(self):
         self.db = DataBase()
