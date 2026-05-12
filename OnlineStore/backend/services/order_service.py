@@ -84,8 +84,3 @@ class OrderService:
         for pm in payment_methods:
             res.append(pm.to_dic())
         return res
-
-    def prepare_payment(self, order_id):
-        order = self.repo.get_order_by_id(order_id)
-        total = self.cart_service.count_total(order.cart)
-        return order.id, total
