@@ -93,7 +93,7 @@ class CartService:
 
         for item in cart.cart_items:
             items_count += item.quantity
-            if item.purchase_price and item.normal_price:
+            if not cart.is_active:
                 total_discount +=(item.normal_price - item.purchase_price) * item.quantity
                 total += item.purchase_price * item.quantity
                 full_price += item.normal_price * item.quantity
