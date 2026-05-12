@@ -8,8 +8,6 @@ class CartService:
 
     def get_total_items_count(self, user_id: float) -> int:
         cart = self._get_or_create_active_cart(user_id)
-        if not cart:
-            cart = self.repo.create_cart(user_id)
         items_count = self.repo.get_items_count(cart.id)
         return items_count
 
@@ -21,7 +19,6 @@ class CartService:
 
     def deactivate_cart(self, cart: Cart) -> Cart:
         cart.is_active = 0
-
         for item in cart.cart_items:
             item.normal_price = item.product.price
             self.product_service.apply_discount_to_product(item.product)
