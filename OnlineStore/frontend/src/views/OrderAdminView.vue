@@ -39,7 +39,7 @@ const nextStatusInfo = computed(()=>{
 })
 
 function updateOrderStatus(){
-  fetch('/api/orders/admin/update',{
+  fetch('/api/admin/orders/order/update',{
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${getAuthToken()}`,

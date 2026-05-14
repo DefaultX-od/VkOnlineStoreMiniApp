@@ -252,7 +252,7 @@ def get_order():
     user_id = get_jwt_identity()
     order_id = request.args.get('order_id')
     statuses = ORDER_SERVICE.retrieve_order_statuses()
-    order = ORDER_SERVICE.retrieve_order(user_id, order_id)
+    order = ORDER_SERVICE.retrieve_order(user_id, ADMIN_ID, order_id)
     if order is None:
         return jsonify(), 403
     return jsonify(statuses=statuses, orderData=order), 200
@@ -287,7 +287,7 @@ def get_orders_admin():
     else:
         return jsonify(), 403
 
-@app.route('/api/admin/orders/update', methods=['POST'])
+@app.route('/api/admin/orders/order/update', methods=['POST'])
 @jwt_required()
 def update_order():
     user_id = get_jwt_identity()
