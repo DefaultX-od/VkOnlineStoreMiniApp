@@ -27,24 +27,22 @@ const handleClick = (val) => {
 <style scoped>
 .overlay{
     background-color: var(--color-border);
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    position: absolute;
+    position: fixed;
     align-items: center;
+    justify-content: center;
     margin: auto;
-    gap: 10;
-    flex-direction: column;
-    z-index: 11;
+    top: 0;
+    left: 0;
+    z-index: 9999;
 }
 .dialog-body{
     width: 85%;
-    position: absolute;
-    top: 30%;
     padding: 5px;
     display: flex;
     flex-direction: column;
-    /* gap: 10px; */
     background-color: var(--color-bg-primary);
     border-radius: 25px;
 }

@@ -158,11 +158,13 @@ setTimeout(() => { showLoadingScreen.value = true }, 300)
     </RouterLink>
   </div>
   <div v-if="!loading && itemsCount <= 0" class="cart-empty"><div class="text bigger bold" style="text-align: center; opacity: 50%;">Ваша корзина пуста!</div></div>
-  <ConfirmDialog 
-    :visible="showConfirm"
-    :text="confirmText"
-    @confirm="handleConfirm"
-  />
+  <Teleport to="body">
+    <ConfirmDialog 
+        :visible="showConfirm"
+        :text="confirmText"
+        @confirm="handleConfirm"
+        />
+   </Teleport>
 </template>
 
 <style scoped>

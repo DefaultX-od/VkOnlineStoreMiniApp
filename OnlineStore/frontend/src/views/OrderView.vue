@@ -92,12 +92,13 @@ setTimeout(()=>{ showLoadingScreen.value = true }, 300)
       <div class="label">Отменить заказ</div>
     </div>
   </div>
-  
-  <ConfirmDialog 
-    :visible="showConfirm"
-    :text="confirmText"
-    @confirm="handleConfirm"
-  />
+  <Teleport to="body">
+    <ConfirmDialog 
+      :visible="showConfirm"
+      :text="confirmText"
+      @confirm="handleConfirm"
+      />
+  </Teleport>
 </template>
 
 <style scoped>
