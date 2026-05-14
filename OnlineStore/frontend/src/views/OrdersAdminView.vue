@@ -12,10 +12,8 @@ const props = defineProps({
     is_completed: Boolean
 })
 
-console.log(`/api/orders/admin?status_id=${props.status_id}&is_canceled=${props.is_canceled}&is_completed=${props.is_completed}`)
-
 function fetchOrdersAdmin(){
-    fetch(`/api/orders/admin?status_id=${props.status_id}&is_canceled=${props.is_canceled}&is_completed=${props.is_completed}`,{
+    fetch(`/api/admin/orders?status_id=${props.status_id}&is_canceled=${props.is_canceled}&is_completed=${props.is_completed}`,{
             headers: {
                 'Authorization': `Bearer ${getAuthToken()}`,
                 'Content-Type': 'application/json'

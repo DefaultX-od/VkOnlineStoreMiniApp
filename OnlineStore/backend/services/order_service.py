@@ -39,10 +39,12 @@ class OrderService:
             orders.append(order.to_dic())
         return orders
 
-    def retrieve_order(self, order_id: int) -> dict:
+    def retrieve_order(self, user_id: float, order_id: int) -> dict:
         order = self.repo.get_order_by_id(order_id)
-        order.cart = self.cart_service.finalize_cart(order.cart)
-        return order.to_dic()
+        if order.user_id == str(user_id):
+            order.cart = self.cart_service.finalize_cart(order.cart)
+            return order.to_dic()
+        return None
 
     def create_order(self, user_id: float, cart: Cart, drop_point_id: int, payment_method_id: int) -> int:
         order_id = self.repo.create_order(user_id, cart, drop_point_id, payment_method_id)

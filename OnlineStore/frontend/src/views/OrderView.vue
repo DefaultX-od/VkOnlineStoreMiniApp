@@ -35,7 +35,7 @@ function handleConfirm(confirmed){
 }
 
 function cancelOrder(){
-  fetch(`?order_id=${props.id}`,{
+  fetch(`/api/orders/order/cancel?order_id=${props.id}`,{
     headers: {
       'Authorization': `Bearer ${getAuthToken()}`,
       'Content-Type': 'application/json'

@@ -104,10 +104,10 @@ function onClickLikeBtn(){
     isFavBtnEnabled.value = false;
     var url = '';
     if(isOnFavList.value){
-        url = '/api/product/delete_from_fav'
+        url = '/api/favorites/delete'
     }
     else{
-        url = '/api/product/add_to_fav'
+        url = '/api/favorites/add'
     }
     fetch(`${url}`, {
         method: 'POST',

@@ -10,7 +10,7 @@ export function useOrderFetch(orderId) {
 
     function fetchOrder(){
         loading.value = true
-        fetch(`/api/order?order_id=${orderId}`,{
+        fetch(`/api/orders/order?order_id=${orderId}`,{
             headers: {
             'Authorization': `Bearer ${getAuthToken()}`,
             'Content-Type': 'application/json'

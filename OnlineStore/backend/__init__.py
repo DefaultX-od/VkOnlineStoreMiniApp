@@ -69,10 +69,12 @@ def auth():
     params_dict = dict(parse_qsl(launch_params))
     user_id = params_dict.get('vk_user_id')
 
+    is_admin = str(user_id) == ADMIN_ID
+
     access_token = create_access_token(identity=user_id)
     return jsonify({
         "accessToken": access_token,
-        "isAdmin": (str(user_id) == False)
+        "isAdmin": is_admin
     })
 
 @app.route('/api/admin/init')
@@ -191,7 +193,7 @@ def refresh_summary():
     cart = CART_SERVICE.refresh_summary(user_id)
     return jsonify(cart), 200
 
-@app.route('/api/product/add_to_fav', methods=['POST'])
+@app.route('/api/favorites/add', methods=['POST'])
 @jwt_required()
 def add_product_to_favorites():
     user_id = get_jwt_identity()
@@ -200,7 +202,7 @@ def add_product_to_favorites():
     status = PRODUCT_SERVICE.add_product_to_favorites(product_id, user_id)
     return jsonify(status), 200
 
-@app.route('/api/product/delete_from_fav', methods=['POST'])
+@app.route('/api/favorites/delete', methods=['POST'])
 @jwt_required()
 def delete_product_from_favorites():
     user_id = get_jwt_identity()
@@ -237,16 +239,6 @@ def checkout():
 
     return jsonify(order_id=order_id), 200
 
-@app.route('/api/order')
-@jwt_required()
-def get_order():
-    user_id = get_jwt_identity()
-    order_id = request.args.get('order_id')
-    statuses = ORDER_SERVICE.retrieve_order_statuses()
-    order = ORDER_SERVICE.retrieve_order(order_id)
-    return jsonify(statuses=statuses, orderData=order), 200
-
-
 @app.route('/api/orders')
 @jwt_required()
 def get_orders():
@@ -254,7 +246,18 @@ def get_orders():
     orders = ORDER_SERVICE.retrieve_orders(user_id)
     return jsonify(orders), 200
 
-@app.route('/api/order/cancel')
+@app.route('/api/orders/order')
+@jwt_required()
+def get_order():
+    user_id = get_jwt_identity()
+    order_id = request.args.get('order_id')
+    statuses = ORDER_SERVICE.retrieve_order_statuses()
+    order = ORDER_SERVICE.retrieve_order(user_id, order_id)
+    if order is None:
+        return jsonify(), 403
+    return jsonify(statuses=statuses, orderData=order), 200
+
+@app.route('/api/orders/order/cancel')
 @jwt_required()
 def cancel_order():
     user_id = get_jwt_identity()
@@ -266,14 +269,14 @@ def cancel_order():
     else:
         return jsonify(), 404
 
-@app.route('/api/orders/admin')
+@app.route('/api/admin/orders')
 @jwt_required()
 def get_orders_admin():
     user_id = get_jwt_identity()
-    status_id = request.args.get('status_id', type=int)
-    is_canceled = request.args.get('is_canceled') == 'true'
-    is_completed = request.args.get('is_completed') == 'true'
     if str(user_id) == ADMIN_ID:
+        status_id = request.args.get('status_id', type=int)
+        is_canceled = request.args.get('is_canceled') == 'true'
+        is_completed = request.args.get('is_completed') == 'true'
         if status_id is not None:
             orders = ORDER_SERVICE.retrieve_orders_by_status(status_id)
         elif is_canceled:
@@ -284,15 +287,15 @@ def get_orders_admin():
     else:
         return jsonify(), 403
 
-@app.route('/api/orders/admin/update', methods=['POST'])
+@app.route('/api/admin/orders/update', methods=['POST'])
 @jwt_required()
 def update_order():
     user_id = get_jwt_identity()
-    data = request.get_json()
-    order_id = data.get('order_id')
-    status_id = data.get('status_id')
-    is_completed = data.get('is_completed')
     if str(user_id) == ADMIN_ID:
+        data = request.get_json()
+        order_id = data.get('order_id')
+        status_id = data.get('status_id')
+        is_completed = data.get('is_completed')
         res, user_id = ORDER_SERVICE.update_order(order_id, status_id, is_completed)
         if res:
             send_notification(f'Статус вашего заказа №{order_id} был обновлен!', user_id, f"https://wokd3r-94-141-53-179.ru.tuna.am/orders/order/{order_id}")
