@@ -190,7 +190,7 @@ def clear_cart():
 @jwt_required()
 def refresh_summary():
     user_id = get_jwt_identity()
-    cart = CART_SERVICE.refresh_summary(user_id)
+    cart = CART_SERVICE.retrieve_active_cart(user_id)
     return jsonify(cart), 200
 
 @app.route('/api/favorites/add', methods=['POST'])
