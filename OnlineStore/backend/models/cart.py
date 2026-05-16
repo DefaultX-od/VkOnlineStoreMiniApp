@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Double, Boolean
+from sqlalchemy import Column, Integer, Boolean, String
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -7,7 +7,7 @@ class Cart(Base):
     __tablename__ = 'carts'
 
     id = Column(Integer, name='cart_id', primary_key=True)
-    user_id = Column(String, name='user_id')
+    user_id = Column(String(100), name='user_id')
     is_active = Column(Boolean, name='is_active')
 
     items_count = 0
