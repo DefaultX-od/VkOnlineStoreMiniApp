@@ -7,7 +7,7 @@ class Cart(Base):
     __tablename__ = 'carts'
 
     id = Column(Integer, name='cart_id', primary_key=True)
-    user_id = Column(Double, name='user_id')
+    user_id = Column(String, name='user_id')
     is_active = Column(Boolean, name='is_active')
 
     items_count = 0

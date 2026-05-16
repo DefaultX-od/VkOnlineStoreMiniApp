@@ -7,7 +7,7 @@ class OrderService:
         self.repo = OrderRepo()
         self.cart_service = cart_service
 
-    def retrieve_orders(self, user_id: float) -> list[dict]:
+    def retrieve_orders(self, user_id: str) -> list[dict]:
         orders_raw = self.repo.get_orders(user_id)
         orders = []
         for order in orders_raw:
@@ -39,19 +39,19 @@ class OrderService:
             orders.append(order.to_dic())
         return orders
 
-    def retrieve_order(self, user_id: float, admin_id: str, order_id: int) -> dict:
+    def retrieve_order(self, user_id: str, admin_id: str, order_id: int) -> dict:
         order = self.repo.get_order_by_id(order_id)
-        if order.user_id == str(user_id) or str(user_id) == admin_id:
+        if order.user_id == user_id or user_id == admin_id:
             order.cart = self.cart_service.finalize_cart(order.cart)
             return order.to_dic()
         return None
 
-    def create_order(self, user_id: float, cart: Cart, drop_point_id: int, payment_method_id: int) -> int:
+    def create_order(self, user_id: str, cart: Cart, drop_point_id: int, payment_method_id: int) -> int:
         order_id = self.repo.create_order(user_id, cart, drop_point_id, payment_method_id)
         cart = self.cart_service.deactivate_cart(cart)
         return order_id
 
-    def cancel_order(self, user_id: float, order_id: int) -> bool | None:
+    def cancel_order(self, user_id: str, order_id: int) -> bool | None:
         order = self.repo.get_order_by_id(order_id)
         if order.user_id == float(user_id):
             return self.repo.cancel_order(order)

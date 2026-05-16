@@ -7,7 +7,7 @@ class OrderRepo:
     def __init__(self):
         self.db = DataBase()
 
-    def get_orders(self, user_id: float) -> list[Order]:
+    def get_orders(self, user_id: str) -> list[Order]:
         with self.db.get_session() as db:
             orders = db.query(Order).options(
                 joinedload(Order.cart).joinedload(Cart.cart_items).joinedload(CartItem.product)
@@ -43,7 +43,7 @@ class OrderRepo:
             ).filter(Order.id == id).first()
         return order
 
-    def create_order(self, user_id: float, cart: Cart, drop_point_id: int, payment_method_id: int) -> int:
+    def create_order(self, user_id: str, cart: Cart, drop_point_id: int, payment_method_id: int) -> int:
         with self.db.get_session() as db:
             order = Order(user_id=user_id, cart_id=cart.id, status_id=1, drop_point_id=drop_point_id, payment_method_id=payment_method_id)
             db.add(order)

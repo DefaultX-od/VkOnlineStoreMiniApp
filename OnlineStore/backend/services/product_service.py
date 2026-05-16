@@ -59,7 +59,7 @@ class ProductService:
         dic['details']['subDetails'] = [detail.to_dic() for detail in product.details[1]]
         return dic
 
-    def retrieve_favorites(self, user_id: float) -> dict:
+    def retrieve_favorites(self, user_id: str) -> dict:
         favorites: list[FavoriteItem] = self.repo.get_favorites_list(user_id)
         products: list[dict] = []
         for favorite in favorites:
@@ -106,11 +106,11 @@ class ProductService:
         if product.album is not None:
             product.main_img = product.album[0]
 
-    def get_fav_status(self, id: int, user_id: float) -> bool:
+    def get_fav_status(self, id: int, user_id: str) -> bool:
         fav_item = self.repo.get_favorite_item(id, user_id)
         return True if fav_item else False
 
-    def add_product_to_favorites(self, product_id: int, user_id: float) -> bool:
+    def add_product_to_favorites(self, product_id: int, user_id: str) -> bool:
         product = self.repo.get_product_by_id(product_id)
         if product:
             fav_item = FavoriteItem(

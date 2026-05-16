@@ -8,6 +8,6 @@ class FavoriteItem(Base):
 
     id = Column(Integer, name='favorite_id', primary_key=True)
     product_id = Column(Integer, ForeignKey('items.item_id'), name='item_id')
-    user_id = Column(Double, name='user_id')
+    user_id = Column(String, name='user_id')
 
     product = relationship('Product', back_populates='fav_item')

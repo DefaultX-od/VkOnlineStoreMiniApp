@@ -24,6 +24,12 @@ GROUP_TOKEN = os.getenv('vk_token')
 API_VERSION = os.getenv('vk_api_version')
 ADMIN_ID = os.getenv('vk_admin_id')
 
+vk_session = VkApi(token=GROUP_TOKEN, api_version=API_VERSION)
+vk = vk_session.get_api()
+longpoll = VkBotLongPoll(vk_session, group_id=GROUP_ID)
+settings = dict(one_time=False, inline=True)
+upload = VkUpload(vk_session)
+
 BUTTONS = [
     {'label' : 'Управление групами категорий', 'payload':{'type':'ctrl_mcgb'},'last': False},
     {'label': 'Управление категорий', 'payload': {'type': 'ctrl_mcb'},'last': False},
@@ -100,15 +106,6 @@ CURRENT_STATE = {
     'action': None,
     'operation': None
 }
-
-vk_session = VkApi(token=GROUP_TOKEN, api_version=API_VERSION)
-vk = vk_session.get_api()
-longpoll = VkBotLongPoll(vk_session, group_id=GROUP_ID)
-
-settings = dict(one_time=False, inline=True)
-
-upload = VkUpload(vk_session)
-
 
 def send_doc(user_id, mod):
     doc = upload.document_message(f'storage/doc_{mod}.xlsx', title=f'doc_{mod}.xlsx', peer_id=user_id)['doc']

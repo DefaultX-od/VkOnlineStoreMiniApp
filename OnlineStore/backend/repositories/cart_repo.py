@@ -8,7 +8,7 @@ class CartRepo:
     def __init__(self):
         self.db = DataBase()
 
-    def get_active_cart(self, user_id: float) -> Cart | None:
+    def get_active_cart(self, user_id: str) -> Cart | None:
         with self.db.get_session() as db:
             cart = db.query(Cart).options(
                 joinedload(Cart.cart_items)
@@ -28,7 +28,7 @@ class CartRepo:
             ).first()
         return cart
 
-    def create_cart(self, user_id: float) -> Cart:
+    def create_cart(self, user_id: str) -> Cart:
         with self.db.get_session() as db:
             cart = Cart(
                 user_id = user_id,

@@ -52,12 +52,12 @@ class ProductRepo:
             ).all()
         return details
 
-    def get_favorite_item(self, product_id: int, user_id: float) -> FavoriteItem :
+    def get_favorite_item(self, product_id: int, user_id: str) -> FavoriteItem :
         with self.db.get_session() as db:
             fav_item = db.query(FavoriteItem).filter(FavoriteItem.product_id == product_id, FavoriteItem.user_id == user_id).first()
             return fav_item
 
-    def get_favorites_list(self, user_id: float) -> list[FavoriteItem]:
+    def get_favorites_list(self, user_id: str) -> list[FavoriteItem]:
         with self.db.get_session() as db:
             favorites = db.query(FavoriteItem).filter(FavoriteItem.user_id == user_id).options(joinedload(FavoriteItem.product)).all()
             return favorites
@@ -69,7 +69,7 @@ class ProductRepo:
             db.refresh(fav_item)
         return fav_item
 
-    def remove_favorite_item(self, product_id: int, user_id: float):
+    def remove_favorite_item(self, product_id: int, user_id: str):
         fav_item = self.get_favorite_item(product_id, user_id)
         with self.db.get_session() as db:
             db.delete(fav_item)

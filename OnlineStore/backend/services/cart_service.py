@@ -6,13 +6,13 @@ class CartService:
         self.repo = CartRepo()
         self.product_service = product_service
 
-    def get_total_items_count(self, user_id: float) -> int:
+    def get_total_items_count(self, user_id: str) -> int:
         cart = self._get_or_create_active_cart(user_id)
         items_count = self.repo.get_items_count(cart.id)
         return items_count
 
 
-    def get_item_quantity(self, product_id: int, user_id: float) -> int:
+    def get_item_quantity(self, product_id: int, user_id: str) -> int:
         cart = self._get_or_create_active_cart(user_id)
         quantity = self.repo.get_cart_item_quantity(cart, product_id)
         return quantity or 0
@@ -26,7 +26,7 @@ class CartService:
         cart = self.repo.update_cart(cart)
         return cart
 
-    def _get_or_create_active_cart(self, user_id: float) -> Cart:
+    def _get_or_create_active_cart(self, user_id: str) -> Cart:
         cart = self.repo.get_active_cart(user_id)
         if cart:
             return cart
@@ -34,7 +34,7 @@ class CartService:
             cart = self.repo.create_cart(user_id)
         return cart
 
-    def get_active_cart(self, user_id: float) -> Cart | None:
+    def get_active_cart(self, user_id: str) -> Cart | None:
         cart = self.repo.get_active_cart(user_id)
         if cart:
             return cart
@@ -47,24 +47,24 @@ class CartService:
         self._set_cart_info(cart)
         return cart
 
-    def retrieve_active_cart(self, user_id: float) -> dict:
+    def retrieve_active_cart(self, user_id: str) -> dict:
         cart = self._get_or_create_active_cart(user_id)
         cart = self.finalize_cart(cart)
         return cart.to_dic()
 
 
-    def add_to_cart(self, product_id: int, user_id: float):
+    def add_to_cart(self, product_id: int, user_id: str):
         cart = self._get_or_create_active_cart(user_id)
         self.repo.add_item(product_id, cart)
 
-    def delete_from_cart(self, item_id: int, user_id: float) -> int:
+    def delete_from_cart(self, item_id: int, user_id: str) -> int:
         cart = self.repo.get_active_cart(user_id)
         cart_item = self.repo.get_cart_item(item_id, cart)
         if cart and cart_item:
             return self.repo.delete_item(cart_item)
         return 0
 
-    def increment_cart_item_quantity(self, item_id: int, user_id: float) -> int:
+    def increment_cart_item_quantity(self, item_id: int, user_id: str) -> int:
         cart = self.repo.get_active_cart(user_id)
         cart_item = self.repo.get_cart_item(item_id, cart)
         if cart.id == cart_item.cart_id:
@@ -72,7 +72,7 @@ class CartService:
             return self.repo.update_cart_item_quantity(cart_item)
         return 0
 
-    def decrement_cart_item_quantity(self, item_id: int, user_id: float) -> int:
+    def decrement_cart_item_quantity(self, item_id: int, user_id: str) -> int:
         cart = self.repo.get_active_cart(user_id)
         cart_item = self.repo.get_cart_item(item_id, cart)
         if cart.id == cart_item.cart_id:
@@ -80,7 +80,7 @@ class CartService:
             return self.repo.update_cart_item_quantity(cart_item)
         return 0
 
-    def clear_cart(self, user_id: float):
+    def clear_cart(self, user_id: str):
         cart = self.repo.get_active_cart(user_id)
         if cart:
             self.repo.delete_all_items(cart)

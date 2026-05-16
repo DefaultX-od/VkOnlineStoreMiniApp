@@ -6,7 +6,7 @@ class Order(Base):
     __tablename__ = 'orders'
 
     id = Column(Integer, name='order_id', primary_key=True)
-    user_id = Column(Double, name='user_id')
+    user_id = Column(String, name='user_id')
     cart_id = Column(Integer, ForeignKey('carts.cart_id'),name='cart_id')
     status_id = Column(Integer, ForeignKey('order_statuses.status_id'),name='status_id')
     drop_point_id = Column(Integer, ForeignKey('drop_points.drop_point_id'), name='drop_point_id')
